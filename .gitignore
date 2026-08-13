@@ -2,7 +2,7 @@
 venv/
 .venv/
 
-# Base de datos local (se genera al primer arranque)
+# Base de datos local (legado SQLite)
 noticias.db
 noticias.db-wal
 noticias.db-shm
@@ -11,6 +11,9 @@ noticias.db-shm
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
+dist/
+build/
 
 # Variables de entorno
 .env
@@ -26,6 +29,12 @@ __pycache__/
 # Sistema
 .DS_Store
 Thumbs.db
+
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+pytest-cache-files*
 
 # Respaldos
 *.bak

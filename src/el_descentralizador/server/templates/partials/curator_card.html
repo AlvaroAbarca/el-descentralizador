@@ -1,0 +1,54 @@
+{% if not source %}
+<div class="vacio">No hay fuentes de este tipo en el catastro.</div>
+{% else %}
+<article class="fuente">
+    <div class="fuente-cab">
+        <div>
+            <div class="fuente-posicion">{{ position }} de {{ total }}</div>
+            <h2 class="fuente-titulo">{{ source.name }}{% if not source.has_rss or not source.feed_url %}<span class="badge-sin-rss">Sin RSS</span>{% endif %}</h2>
+            <div class="fuente-meta">
+                <span class="region">{{ source.region }}</span>
+                {% if source.url %}<a href="{{ source.url }}" target="_blank" rel="noopener">Sitio ↗</a>{% endif %}
+                {% if source.feed_url %}<a href="{{ source.feed_url }}" target="_blank" rel="noopener">Feed RSS ↗</a>{% endif %}
+            </div>
+        </div>
+        <span class="estado-pill estado-{{ status_ui }}">{{ status_ui }}</span>
+    </div>
+
+    <div class="acciones">
+        <button class="accion accion-aprobar" type="button" data-estado="approved"
+                hx-patch="/partials/sources/{{ source.id }}/curation?kind={{ kind }}"
+                hx-vals='{"status": "approved"}'
+                hx-include="#comentario"
+                hx-target="#contenedor" hx-swap="innerHTML">✓ Aprobar<span class="tecla">tecla 1</span></button>
+        <button class="accion accion-arreglar" type="button" data-estado="fix"
+                hx-patch="/partials/sources/{{ source.id }}/curation?kind={{ kind }}"
+                hx-vals='{"status": "fix"}'
+                hx-include="#comentario"
+                hx-target="#contenedor" hx-swap="innerHTML">⚙ Arreglar<span class="tecla">tecla 2</span></button>
+        <button class="accion accion-descartar" type="button" data-estado="discarded"
+                hx-patch="/partials/sources/{{ source.id }}/curation?kind={{ kind }}"
+                hx-vals='{"status": "discarded"}'
+                hx-include="#comentario"
+                hx-target="#contenedor" hx-swap="innerHTML">✗ Descartar<span class="tecla">tecla 3</span></button>
+        <button class="accion accion-saltar" type="button" data-accion="saltar">↷ Saltar<span class="tecla">tecla espacio</span></button>
+    </div>
+    <label class="comentario-label" for="comentario">Comentario (opcional)</label>
+    <textarea class="comentario" id="comentario" name="comment" placeholder="Notas: por qué descartar, qué arreglar (buscar feed, scraping HTML, etc.)">{{ source.curation_comment or "" }}</textarea>
+
+    <div class="muestra-titulo" style="margin-top: 28px;">{% if not source.has_rss or not source.feed_url %}Estado del sitio{% else %}Últimas 10 noticias del feed{% endif %}</div>
+    <div id="muestra"
+         {% if source.has_rss and source.feed_url %}hx-get="/partials/sources/{{ source.id }}/sample" hx-trigger="load"{% endif %}>
+        {% if not source.has_rss or not source.feed_url %}
+        <div class="sin-feed">
+            <b>Esta fuente no tiene feed RSS detectado.</b><br>
+            {% if source.url %}Revisá el sitio: <a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.url }} ↗</a>
+            {% else %}No hay sitio web registrado tampoco.{% endif %}<br>
+            Marcá <b>Arreglar</b> si vale la pena buscar un feed o scrapearla, o <b>Descartar</b> si no.
+        </div>
+        {% else %}
+        <div class="cargando">Descargando feed…</div>
+        {% endif %}
+    </div>
+</article>
+{% endif %}

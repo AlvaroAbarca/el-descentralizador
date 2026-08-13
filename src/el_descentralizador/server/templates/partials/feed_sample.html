@@ -1,0 +1,22 @@
+{% if error %}
+<div class="error">No se pudo descargar el feed: {{ error }}</div>
+{% elif not entries %}
+<div class="error">El feed respondió pero no tiene entradas.</div>
+{% else %}
+<div class="entradas">
+    {% for e in entries %}
+    <div class="entrada">
+        {% if e.image_url %}
+        <img class="entrada-img" src="{{ e.image_url }}" alt="" onerror="this.remove()">
+        {% else %}
+        <div class="entrada-img"></div>
+        {% endif %}
+        <div class="entrada-cuerpo">
+            <div class="entrada-titulo">{{ e.title }}</div>
+            <div class="entrada-resumen">{{ e.summary }}</div>
+            <div class="entrada-pie">{{ e.published_label }} · <a href="{{ e.url }}" target="_blank" rel="noopener">abrir ↗</a></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,30 @@
+{% if items %}
+{% for a in items %}
+<article class="pieza" data-id="{{ a.id }}" data-title="{{ a.title }}" data-region="{{ a.region }}"
+         data-source-name="{{ a.source_name }}" data-kind="{{ a.kind }}" data-url="{{ a.url }}"
+         data-image-url="{{ a.image_url or '' }}" data-published-at="{{ a.published_at.isoformat() if a.published_at else '' }}">
+    {% if a.image_url %}
+    <img class="pieza-img" src="{{ a.image_url }}" loading="lazy" alt="" onerror="this.remove()">
+    {% endif %}
+    <div class="pieza-cuerpo">
+        <div class="kicker">{% if a.kind == "municipality" %}{{ a.region }} <span class="muni">· Municipal</span>{% else %}{{ a.region }}{% endif %}</div>
+        <h2 class="pieza-titulo">{{ a.title }}</h2>
+        <p class="pieza-bajada">{{ a.summary or "" }}</p>
+        {% if a.also_in %}
+        <div class="tambien">↗ También en: {% for o in a.also_in %}<a href="{{ o.url }}" target="_blank" rel="noopener">{{ o.source_name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</div>
+        {% endif %}
+        <div class="pieza-pie">
+            <span class="pieza-medio">{{ a.source_name }}</span>
+            <span class="pieza-fecha">{{ a.published_label }}</span>
+        </div>
+        <a class="pieza-fuente" href="{{ a.url }}" target="_blank" rel="noopener">
+            ↗ Leer en {{ a.source_name }}
+        </a>
+    </div>
+</article>
+{% endfor %}
+{% else %}
+<div class="vacio" style="grid-column:1/-1">No hay noticias que coincidan con los filtros.</div>
+{% endif %}
+<span id="contador" hx-swap-oob="true">{% if total %}{{ shown }} noticias en portada{% if has_more %} +{% endif %}{% endif %}</span>
+<button class="btn-mas" id="btn-mas" hx-swap-oob="true" type="button" style="display:{% if has_more %}{% else %}none{% endif %}">Más noticias</button>
