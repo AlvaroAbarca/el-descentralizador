@@ -1,0 +1,19 @@
+{
+  "name": "El Descentralizador",
+  "user": "ubuntu",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "install": "uv sync --extra dev",
+  "start": "bash .cursor/start.sh",
+  "terminals": [
+    {
+      "name": "app",
+      "command": "set -a && . ./.env.example && set +a && uv run litestar --app el_descentralizador.server.asgi:create_app run --host 0.0.0.0 --port 8000",
+      "description": "Litestar dev server (with in-process SAQ worker) on http://localhost:8000"
+    }
+  ],
+  "ports": [
+    { "name": "app", "port": 8000 }
+  ]
+}
